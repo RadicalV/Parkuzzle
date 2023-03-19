@@ -28,6 +28,7 @@ public class InputManager : MonoBehaviour
             playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
             playerControls.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
             playerControls.PlayerMovement.Jump.performed += i => jumpInput = true;
+            playerControls.PlayerMovement.Jump.canceled += i => jumpInput = false;
         }
 
         playerControls.Enable();
