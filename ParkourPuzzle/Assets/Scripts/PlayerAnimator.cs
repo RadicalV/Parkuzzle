@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerAnimator : MonoBehaviour
+public class PlayerAnimator : NetworkBehaviour
 {
     private const string IS_JUMPING = "IsJumping";
     private const string IS_GROUNDED = "IsGrounded";
@@ -24,6 +23,8 @@ public class PlayerAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner) return;
+
         animator.SetBool(IS_FALLING, playerLocomotion.IsFalling());
         animator.SetBool(IS_GROUNDED, playerLocomotion.IsGrounded());
         animator.SetBool(IS_JUMPING, playerLocomotion.IsJumping());

@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerLocomotion : MonoBehaviour
+public class PlayerLocomotion : NetworkBehaviour
 {
     InputManager inputManager;
     CapsuleCollider capsuleCollider;
@@ -47,6 +46,11 @@ public class PlayerLocomotion : MonoBehaviour
     private bool isMoving = false;
     private float forward = 0;
     private float strafe = 0;
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner) this.enabled = false;
+    }
 
     private void Awake()
     {

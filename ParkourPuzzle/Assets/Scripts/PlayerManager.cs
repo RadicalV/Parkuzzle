@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     private InputManager inputManager;
     private PlayerLocomotion playerLocomotion;
@@ -12,6 +12,15 @@ public class PlayerManager : MonoBehaviour
     private Quaternion originalRotation;
     private Quaternion respawnRotation;
     private int tickRate = 64;
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner) this.enabled = false;
+        else
+        {
+            transform.GetComponentInChildren<PlayerAnimator>().transform.GetChild(0).gameObject.SetActive(false);
+        }
+    }
 
     private void Awake()
     {

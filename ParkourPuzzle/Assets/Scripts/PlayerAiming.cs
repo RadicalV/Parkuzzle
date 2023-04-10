@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerAiming : MonoBehaviour
+public class PlayerAiming : NetworkBehaviour
 {
     InputManager inputManager;
 
@@ -13,6 +14,11 @@ public class PlayerAiming : MonoBehaviour
     public float verticalSensitivity = 1f;
     float xRotation;
     float yRotation;
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner) gameObject.SetActive(false);
+    }
 
     private void Awake()
     {
@@ -27,13 +33,16 @@ public class PlayerAiming : MonoBehaviour
 
     void Update()
     {
-        yRotation += inputManager.horizontalCameraInput * horizontalSensitivity * sensitivityMultiplier;
-        xRotation -= inputManager.verticalCameraInput * verticalSensitivity * sensitivityMultiplier;
+        if (IsOwner)
+        {
+            yRotation += inputManager.horizontalCameraInput * horizontalSensitivity * sensitivityMultiplier;
+            xRotation -= inputManager.verticalCameraInput * verticalSensitivity * sensitivityMultiplier;
 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        bodyTransform.rotation = Quaternion.Euler(0f, yRotation, 0f);
+            transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+            bodyTransform.rotation = Quaternion.Euler(0f, yRotation, 0f);
+        }
     }
 
     public void SetYRotation(float yRotationValue)
