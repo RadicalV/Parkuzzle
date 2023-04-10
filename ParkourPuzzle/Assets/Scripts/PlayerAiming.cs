@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAiming : MonoBehaviour
@@ -13,7 +11,8 @@ public class PlayerAiming : MonoBehaviour
     public float sensitivityMultiplier = 1f;
     public float horizontalSensitivity = 1f;
     public float verticalSensitivity = 1f;
-    private Vector3 realRotation;
+    float xRotation;
+    float yRotation;
 
     private void Awake()
     {
@@ -28,13 +27,17 @@ public class PlayerAiming : MonoBehaviour
 
     void Update()
     {
-        float xCameraMovement = inputManager.horizontalCameraInput * horizontalSensitivity * sensitivityMultiplier;
-        float yCameraMovement = -inputManager.verticalCameraInput * verticalSensitivity * sensitivityMultiplier;
+        yRotation += inputManager.horizontalCameraInput * horizontalSensitivity * sensitivityMultiplier;
+        xRotation -= inputManager.verticalCameraInput * verticalSensitivity * sensitivityMultiplier;
 
-        realRotation = new Vector3(Mathf.Clamp(realRotation.x + yCameraMovement, -90f, 90f), realRotation.y + xCameraMovement, realRotation.z);
-        realRotation.z = Mathf.Lerp(realRotation.z, 0f, Time.deltaTime * 3f);
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        bodyTransform.eulerAngles = Vector3.Scale(realRotation, new Vector3(0f, 1f, 0f));
-        transform.eulerAngles = realRotation;
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        bodyTransform.rotation = Quaternion.Euler(0f, yRotation, 0f);
+    }
+
+    public void SetYRotation(float yRotationValue)
+    {
+        yRotation = yRotationValue;
     }
 }

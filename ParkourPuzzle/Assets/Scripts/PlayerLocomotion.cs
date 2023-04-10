@@ -40,6 +40,14 @@ public class PlayerLocomotion : MonoBehaviour
     private float _deltaTime;
     private GameObject groundObject;
 
+    //animation states
+    private bool isJumping = false;
+    private bool isGrounded = false;
+    private bool isFalling = false;
+    private bool isMoving = false;
+    private float forward = 0;
+    private float strafe = 0;
+
     private void Awake()
     {
         inputManager = GetComponent<InputManager>();
@@ -70,13 +78,14 @@ public class PlayerLocomotion : MonoBehaviour
         }
 
         CheckGrounded();
+        ClampVelocity();
 
         _playerManager.moveData.origin += _playerManager.moveData.velocity * _deltaTime;
 
         // don't penetrate walls
         SurfPhysics.ResolveCollisions(capsuleCollider, ref _playerManager.moveData.origin, ref _playerManager.moveData.velocity);
 
-        currentVelocity = _playerManager.moveData.velocity.magnitude;
+        currentVelocity = _playerManager.moveData.velocity.magnitude * 39.37f;
         _playerManager = null;
     }
 
@@ -176,12 +185,25 @@ public class PlayerLocomotion : MonoBehaviour
         else if (inputManager.horizontalMovementInput < 0f)
             sideMove = -acceleration;
 
+        this.forward = forwardMove;
+        this.strafe = sideMove;
+
         for (int i = 0; i < 3; i++)
             wishVel[i] = forward[i] * forwardMove + right[i] * sideMove;
         wishVel[1] = 0;
 
+        isMoving = wishVel != Vector3.zero;
+
         wishSpeed = wishVel.magnitude;
         wishDir = wishVel.normalized;
+    }
+
+    private void ClampVelocity()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            _playerManager.moveData.velocity[i] = Mathf.Clamp(_playerManager.moveData.velocity[i], -maxVelocity, maxVelocity);
+        }
     }
 
     private void HandleFriction()
@@ -229,6 +251,11 @@ public class PlayerLocomotion : MonoBehaviour
             || movingUp)
         {
             SetGround(null);
+            isGrounded = false;
+
+            if ((isJumping && _playerManager.moveData.velocity.y < 0) || _playerManager.moveData.velocity.y < -2f)
+                isFalling = true;
+
             if (movingUp)
                 _playerManager.moveData.surfaceFriction = airFriction;
             return false;
@@ -236,6 +263,10 @@ public class PlayerLocomotion : MonoBehaviour
         else
         {
             SetGround(trace.hitCollider.gameObject);
+            isGrounded = true;
+            isFalling = false;
+            isJumping = false;
+
             return true;
         }
     }
@@ -268,5 +299,36 @@ public class PlayerLocomotion : MonoBehaviour
         //     _surfer.moveData.wishJump = false;
 
         _playerManager.moveData.velocity.y += jumpForce;
+        isJumping = true;
+    }
+
+    public bool IsJumping()
+    {
+        return isJumping;
+    }
+
+    public bool IsFalling()
+    {
+        return isFalling;
+    }
+
+    public bool IsGrounded()
+    {
+        return isGrounded;
+    }
+
+    public bool IsMoving()
+    {
+        return isMoving;
+    }
+
+    public float Forward()
+    {
+        return forward;
+    }
+
+    public float Strafe()
+    {
+        return strafe;
     }
 }
