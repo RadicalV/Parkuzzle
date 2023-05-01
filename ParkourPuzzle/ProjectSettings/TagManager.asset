@@ -12,8 +12,8 @@ TagManager:
   - Water
   - UI
   - Ground
-  - BoundingBox
-  - Teleport
+  - Trigger
+  - Player
   - 
   - 
   - 

@@ -8,15 +8,21 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 0
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 9c9499773182c21439ba338d933769f5
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 822970ce6fd742a479767baf1048531d
+  - enabled: 1
+    path: Assets/Scenes/LobbyScene.unity
+    guid: b0d446570437f1f4ca2cf98a377c12e2
+  - enabled: 1
     path: Assets/Scenes/Surf_Utopia.unity
     guid: db450b22fe7f1eb4790ecda4eb54053f
   - enabled: 1
     path: Assets/Scenes/Surf_Kitsune.unity
     guid: 3acdabbd7d48a6a44adc1c4934daae8d
-  - enabled: 1
-    path: Assets/Scenes/TestScene.unity
-    guid: 2fc20d3eb15bc864d96730b6186dd72f
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 90fe0b4978c040b4eb76cff2ad402d26,
       type: 2}
