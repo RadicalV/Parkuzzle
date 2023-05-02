@@ -11,6 +11,7 @@
     "com.unity.render-pipelines.universal": "12.1.10",
     "com.unity.services.lobby": "1.0.3",
     "com.unity.test-framework": "1.1.33",
+    "com.unity.testtools.codecoverage": "1.2.3",
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.6.4",
     "com.unity.ugui": "1.0.0",
@@ -49,5 +50,7 @@
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
   },
-  "testables": ["com.unity.inputsystem"]
+  "testables": [
+    "com.unity.inputsystem"
+  ]
 }

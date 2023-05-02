@@ -74,7 +74,7 @@ public class PlayerUITests
     }
 
     [UnityTest]
-    public IEnumerator ShouldUpdatTimerUIValue()
+    public IEnumerator ShouldUpdateTimerUIValue()
     {
         LoadMap();
 

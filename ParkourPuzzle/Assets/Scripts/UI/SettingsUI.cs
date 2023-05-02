@@ -98,37 +98,37 @@ public class SettingsUI : MonoBehaviour
         moveUpButton.onClick.AddListener(() =>
         {
             moveUpText.text = "";
-            RebindBinding(InputManager.Binding.Move_Up);
+            RebindBinding(InputManager.Binding.Move_Up, moveUpButton);
         });
         moveDownButton.onClick.AddListener(() =>
         {
             moveDownText.text = "";
-            RebindBinding(InputManager.Binding.Move_Down);
+            RebindBinding(InputManager.Binding.Move_Down, moveDownButton);
         });
         moveLeftButton.onClick.AddListener(() =>
         {
             moveLeftText.text = "";
-            RebindBinding(InputManager.Binding.Move_Left);
+            RebindBinding(InputManager.Binding.Move_Left, moveLeftButton);
         });
         moveRightButton.onClick.AddListener(() =>
         {
             moveRightText.text = "";
-            RebindBinding(InputManager.Binding.Move_Right);
+            RebindBinding(InputManager.Binding.Move_Right, moveRightButton);
         });
         jumpButton.onClick.AddListener(() =>
         {
             jumpText.text = "";
-            RebindBinding(InputManager.Binding.Jump);
+            RebindBinding(InputManager.Binding.Jump, jumpButton);
         });
         crouchButton.onClick.AddListener(() =>
         {
             crouchText.text = "";
-            RebindBinding(InputManager.Binding.Crouch);
+            RebindBinding(InputManager.Binding.Crouch, crouchButton);
         });
         restartButton.onClick.AddListener(() =>
         {
             restartText.text = "";
-            RebindBinding(InputManager.Binding.Restart);
+            RebindBinding(InputManager.Binding.Restart, restartButton);
         });
         sensitivitySlider.onValueChanged.AddListener(newValue =>
         {
@@ -229,14 +229,16 @@ public class SettingsUI : MonoBehaviour
         pressToRebindKeyTransform.SetActive(false);
     }
 
-    private void RebindBinding(InputManager.Binding binding)
+    private void RebindBinding(InputManager.Binding binding, Button btn)
     {
+        btn.interactable = false;
         ShowPressToRebindKey();
         InputManager.Instance.RebindBinding(binding, () =>
         {
             HidePressToRebindKey();
             UpdateVisual();
         });
+        btn.interactable = true;
     }
 
     private void UpdateVisual()
