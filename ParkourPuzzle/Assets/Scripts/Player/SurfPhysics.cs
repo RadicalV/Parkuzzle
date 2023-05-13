@@ -32,14 +32,9 @@ public class SurfPhysics
         }
     }
 
-    public static int ClipVelocity(Vector3 input, Vector3 normal, ref Vector3 output, float overbounce)
+    public static void ClipVelocity(Vector3 input, Vector3 normal, ref Vector3 output, float overbounce)
     {
         var angle = normal[1];
-        var blocked = 0x00;     // Assume unblocked.
-        if (angle > 0)          // If the plane that is blocking us has a positive z component, then assume it's a floor.
-            blocked |= 0x01;
-        if (angle == 0)         // If the plane has no Z, it is vertical (wall/step)
-            blocked |= 0x02;
 
         // Determine how far along plane to slide based on incoming direction.
         var backoff = Vector3.Dot(input, normal) * overbounce;
@@ -56,16 +51,12 @@ public class SurfPhysics
         {
             output -= (normal * adjust);
         }
-
-        // Return blocking flags.
-        return blocked;
     }
 
-    public static int Reflect(ref Vector3 velocity, Collider collider, Vector3 origin, float deltaTime)
+    public static void Reflect(ref Vector3 velocity, Collider collider, Vector3 origin, float deltaTime)
     {
         float d;
         var newVelocity = Vector3.zero;
-        var blocked = 0;                  // Assume not blocked
         var numplanes = 0;                //  and not sliding along any planes
         var originalVelocity = velocity;  // Store original velocity
         var primalVelocity = velocity;
@@ -101,18 +92,6 @@ public class SurfPhysics
                 break;      // moved the entire distance
             }
 
-            // If the plane we hit has a high y component in the normal, then it's probably a floor
-            if (trace.planeNormal.y > SurfSlope)
-            {
-                blocked |= 1;       // floor
-            }
-
-            // If the plane has a zero y component in the normal, then it's a step or wall
-            if (trace.planeNormal.y == 0)
-            {
-                blocked |= 2;       // step / wall
-            }
-
             // Reduce amount of timeL0eft by timeleft * fraction that we covered.
             timeLeft -= timeLeft * trace.fraction;
 
@@ -137,7 +116,7 @@ public class SurfPhysics
                     if (_planes[i][1] > SurfSlope)
                     {
                         // floor or slope
-                        return blocked;
+                        return;
                     }
                     else
                     {
@@ -173,7 +152,7 @@ public class SurfPhysics
                 if (i != numplanes)
                 {   // go along this plane
                     // velocity is set in clipping call, no need to set again.
-                    ;
+                    continue;
                 }
                 else
                 {   // go along the crease
@@ -187,7 +166,7 @@ public class SurfPhysics
                     velocity = dir * d;
                 }
 
-                // if original velocity is against the original velocity, stop dead to avoid tiny occilations in sloping corners
+                // if velocity is against the original velocity, stop dead to avoid tiny occilations in sloping corners
                 d = Vector3.Dot(velocity, primalVelocity);
                 if (d <= 0f)
                 {
@@ -201,8 +180,6 @@ public class SurfPhysics
         {
             velocity = Vector3.zero;
         }
-
-        return blocked;
     }
 
     public static void GetCapsulePoints(CapsuleCollider capc, Vector3 origin, out Vector3 p1, out Vector3 p2)
